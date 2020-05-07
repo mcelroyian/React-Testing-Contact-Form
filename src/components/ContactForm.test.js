@@ -6,8 +6,27 @@ test('renders', () => {
     render(<ContactForm />)
 })
 
+test('First Name errors pops up', async () => {
+    const { getByLabelText, getByText, getByTestId } = render(<ContactForm />)
+
+    const firstName = getByLabelText(/first name/i)
+    fireEvent.change(firstName, { target: { value: 'reallylongname' } })
+    const submitButton = getByTestId('submit')
+    fireEvent.click(submitButton)
+
+    await waitFor( () => {
+        expect(getByText(/maxLength/i)).toBeInTheDocument()
+    })
+})
+
 test('correctly entering data correctly submits', async () => {
-    const {findAllByText, getByLabelText, getAllByDisplayValue, getByDisplayValue, getByTestId, getByText, getByRole } = render(<ContactForm />)
+    const {
+        getByLabelText, 
+        getAllByDisplayValue, 
+        getByDisplayValue, 
+        getByTestId, 
+        getByText
+    } = render(<ContactForm />)
 
     //inputs
     const firstName = getByLabelText(/first name/i)
